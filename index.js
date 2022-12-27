@@ -14,11 +14,32 @@ app.use(express.json());
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.01t3jpf.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
-});
+
+async function run() {
+    try {
+        const allPostCollection = client.db('Message-book').collection('allPost');
+
+        app.get('/allPosts', async (req, res) => {
+            const query = {}
+            const options = await allPostCollection.find(query).toArray()
+            res.send(options);
+        })
+
+        app.post('/addPost', async (req, res) => {
+            const post = req.body
+            const result = await allPostCollection.insertOne(post)
+            res.send(result)
+        })
+
+
+
+    }
+    finally {
+
+    }
+
+}
+run().catch(error => console.log(error))
 
 
 
