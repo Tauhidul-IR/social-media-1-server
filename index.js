@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.01t3jpf.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -29,6 +29,26 @@ async function run() {
             const post = req.body
             const result = await allPostCollection.insertOne(post)
             res.send(result)
+        })
+
+        app.put('/allPosts/:id', async (req, res) => {
+            const id = req.params.id;
+            const unique = { _id: ObjectId(id) };
+            const oldPost = req.body;
+            console.log(oldPost);
+            const option = { upsert: true };
+            const updatelove = {
+                $set: {
+                    post: oldPost.post,
+                    title: oldPost.title,
+                    email: oldPost.email,
+                    img: oldPost.img,
+                    love: oldPost.love
+
+                }
+            }
+            const result = await allPostCollection.updateOne(unique, updatelove, option);
+            res.send(result);
         })
 
 
