@@ -52,6 +52,28 @@ async function run() {
             res.send(result);
         })
 
+
+        app.put('/posts/:id', async (req, res) => {
+            const id = req.params.id;
+            const unique = { _id: ObjectId(id) };
+            const oldPost = req.body;
+            console.log(oldPost);
+            const option = { upsert: true };
+            const updatelove = {
+                $set: {
+                    post: oldPost.post,
+                    title: oldPost.title,
+                    email: oldPost.email,
+                    img: oldPost.img,
+                    love: oldPost.love,
+                    comments: oldPost.comments
+
+                }
+            }
+            const result = await allPostCollection.updateOne(unique, updatelove, option);
+            res.send(result);
+        })
+
         //User information -----------
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -65,6 +87,13 @@ async function run() {
             const query = { email: email }
             const user = await allUsersCollection.findOne(query)
             res.send(user)
+        })
+
+        app.get('/posts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const post = await allPostCollection.findOne(query)
+            res.send(post)
         })
 
 
