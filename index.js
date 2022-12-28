@@ -69,6 +69,26 @@ async function run() {
 
 
 
+        app.put('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const unique = { _id: ObjectId(id) };
+            const oldUser = req.body;
+            const option = { upsert: true };
+            const updateuserInfo = {
+                $set: {
+                    name: oldUser.name,
+                    email: oldUser.email,
+                    university: oldUser.university,
+                    address: oldUser.address
+
+                }
+            }
+            const result = await allUsersCollection.updateOne(unique, updateuserInfo, option);
+            res.send(result);
+        })
+
+
+
     }
     finally {
 
