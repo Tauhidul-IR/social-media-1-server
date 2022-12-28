@@ -26,6 +26,15 @@ async function run() {
             res.send(options);
         })
 
+        app.get('/topPost', async (req, res) => {
+            const query = {}
+            const option = {
+                sort: { love: -1 },
+            }
+            const result = await allPostCollection.find(query).limit(3).toArray()
+            res.send(result);
+        })
+
         app.post('/addPost', async (req, res) => {
             const post = req.body
             const result = await allPostCollection.insertOne(post)
