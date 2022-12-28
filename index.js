@@ -18,6 +18,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const allPostCollection = client.db('Message-book').collection('allPost');
+        const allUsersCollection = client.db('Message-book').collection('users');
 
         app.get('/allPosts', async (req, res) => {
             const query = {}
@@ -49,6 +50,14 @@ async function run() {
             }
             const result = await allPostCollection.updateOne(unique, updatelove, option);
             res.send(result);
+        })
+
+        //User information -----------
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await allUsersCollection.insertOne(user)
+            res.send(result);
+
         })
 
 
