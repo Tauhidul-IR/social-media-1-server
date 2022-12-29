@@ -31,7 +31,7 @@ async function run() {
             const option = {
                 sort: { love: -1 },
             }
-            const result = await allPostCollection.find(query).limit(3).toArray()
+            const result = await allPostCollection.find(query, option).limit(3).toArray()
             res.send(result);
         })
 
